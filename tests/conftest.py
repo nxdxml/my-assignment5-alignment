@@ -210,7 +210,9 @@ def output_strs():
 
 @pytest.fixture
 def model_id():
-    return "/data/a5-alignment/models/Qwen2.5-Math-1.5B"
+    # 上课才有公共的数据集文件夹，换成自己路径
+    return "/home/dl/projects/Qwen2-Math-1.5B"
+    # return "/data/a5-alignment/models/Qwen2.5-Math-1.5B"
 
 
 @pytest.fixture
