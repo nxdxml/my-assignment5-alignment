@@ -14,9 +14,7 @@ def get_response_log_probs(
     Assumes input_ids and labels are same shape and aligned.
     """
 
-    model.eval()
-    with torch.no_grad():
-        logits = model(input_ids).logits  # (B, S, V)
+    logits = model(input_ids).logits  # (B, S, V)
 
     # Compute log-softmax over vocabulary
     log_probs_all = F.log_softmax(logits, dim=-1)  # (B, S, V)

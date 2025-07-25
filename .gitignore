@@ -167,3 +167,4 @@ cython_debug/
 #.idea/
 
 cs336_alignment/checkpoint
+mlruns/
