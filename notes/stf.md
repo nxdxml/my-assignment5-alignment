@@ -11,5 +11,8 @@ Format + Answer Correct: 35
 Format Correct Only: 1173
 Both Wrong: 111
 
-
+# 修改loss后测试
+Format + Answer Correct: 73
+Format Correct Only: 1019
+Both Wrong: 227
 ```

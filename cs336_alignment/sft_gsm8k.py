@@ -185,7 +185,6 @@ while step < total_steps:
         input_ids = train_batch["input_ids"].to(device)
         labels = train_batch["labels"].to(device)
         
-        # TODO
         response_mask = train_batch["response_mask"].to(device)
         log_probs_dict = get_response_log_probs(
             model=model,

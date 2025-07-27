@@ -57,8 +57,8 @@ def evaluate_vllm(
 
         # reward = reward_fn(prompt, answers[i])
 
-        gt_answer = run_parse_gsm8k_response(answers[i])
-        predicted_answer = run_parse_gsm8k_response(gen_text)
+        gt_answer = parse_gsm8k_response(answers[i])
+        predicted_answer = parse_gsm8k_response(gen_text)
         # 格式是否符合：只要成功提取数字就算格式正确
         format_reward = 1.0 if predicted_answer is not None else 0.0
         # 正确性判断
@@ -105,30 +105,17 @@ def evaluate_vllm(
         for r in results:
             f.write(json.dumps(r) + "\n")
 
-def run_parse_gsm8k_response(
-    model_output: str,
-) -> str | None:
-    """
-    Given a GSM8K model output, parse the model output into a predicted numeric answer by
-    taking the last number that occurs in the output.
-
-    model_output: str
-        str with the model's output to a GSM8K example.
-
-    Returns:
-        str with the predicted numeric answer if the model output can be parsed into a prediction,
-        else None.
-    """
-    # raise NotImplementedError
+def parse_gsm8k_response(model_output: str) -> str | None:
     import re
+
+    # 优先找 Final Answer 格式
+    match = re.search(r"Final Answer:\s*(\-?\d+\.?\d*)", model_output)
+    if match:
+        return match.group(1)
+
+    # fallback：找最后一个数字
     numbers = re.findall(r'-?\d+\.?\d*', model_output)
-    
-    # 如果没有找到任何数字，返回 None
-    if not numbers:
-        return None
-    
-    # 返回最后一个数字
-    return numbers[-1]
+    return numbers[-1] if numbers else None
 
 def main():
     # 1从 /data/a5-alignment/MATH/validation.jsonl 加载 MATH 验证集
@@ -152,21 +139,13 @@ def main():
     
     prompts = []
     for question in questions:
-        prompt = f"""# Instruction
-Below is a list of conversations between a human and an AI assistant (you).
-Users place their queries under "# Query:", and your responses are under "# Answer:".
-You are a helpful, respectful, and honest assistant.
-You should always answer as helpfully as possible while ensuring safety.
-Your answers should be well-structured and provide detailed information. They should also have an engaging tone.
-Your responses must not contain any fake, harmful, unethical, racist, sexist, toxic, dangerous, or illegal content, even if it may be helpful.
-Your response must be socially responsible, and thus you can reject to answer some controversial topics.
+        prompt = f"""You are a helpful and honest assistant. Solve the following problem step by step. Then give the final answer in the format:
 
-# Query:
-```{question}
-Answer:```
+Final Answer: [your numeric answer]
 
-# Answer:
-```"""
+Question: {question}
+
+Answer:"""
         prompts.append(prompt)
 
 
@@ -184,6 +163,7 @@ Answer:```
     llm = LLM("/home/dl/projects/Qwen2-Math-1.5B")
     # 微调后
     # llm = LLM("/home/dl/projects/my-assignment5-alignment/cs336_alignment/checkpoint/")
+    # llm = LLM("/home/dl/projects/my-assignment5-alignment/cs336_alignment/checkpoint/1.5B-20250725")
     sampling_params = SamplingParams(
         temperature=1.0, # 控制生成文本的“随机性”或“创造力”。越大越随机
         top_p=1.0, # 模型会从概率总和达到 top_p 的词中采样
