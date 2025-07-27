@@ -160,10 +160,11 @@ Answer:"""
     # - eval_sampling_params 指定采样参数（如 temperature=0.7 等）
     # - reward_fn 是评估函数
     # 使用 vllm_model.generate(prompts, sampling_params) 获取模型输出   
-    llm = LLM("/home/dl/projects/Qwen2-Math-1.5B")
+    # llm = LLM("/home/dl/projects/Qwen2-Math-1.5B")
     # 微调后
     # llm = LLM("/home/dl/projects/my-assignment5-alignment/cs336_alignment/checkpoint/")
     # llm = LLM("/home/dl/projects/my-assignment5-alignment/cs336_alignment/checkpoint/1.5B-20250725")
+    llm = LLM("/home/dl/projects/my-assignment5-alignment/cs336_alignment/checkpoint/1.5B-20250728-grpo")
     sampling_params = SamplingParams(
         temperature=1.0, # 控制生成文本的“随机性”或“创造力”。越大越随机
         top_p=1.0, # 模型会从概率总和达到 top_p 的词中采样

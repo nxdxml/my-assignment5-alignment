@@ -15,4 +15,9 @@ Both Wrong: 111
 Format + Answer Correct: 73
 Format Correct Only: 1019
 Both Wrong: 227
+
+# 对比grpo
+Format + Answer Correct: 319
+Format Correct Only: 660
+Both Wrong: 340
 ```

@@ -92,7 +92,9 @@ def compute_naive_policy_gradient_loss(
         （最终会在训练循环中对 batch 和序列维度进行聚合）。
     """
 
-    advantages = raw_rewards_or_advantages.expand_as(policy_log_probs) # b s
+    # advantages = raw_rewards_or_advantages.expand_as(policy_log_probs) # b s
+    advantages = raw_rewards_or_advantages.to(policy_log_probs.device).expand_as(policy_log_probs)
+
     loss = - advantages * policy_log_probs
 
     return loss

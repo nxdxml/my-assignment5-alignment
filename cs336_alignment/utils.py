@@ -58,6 +58,7 @@ def masked_mean(
     """
     # 1先将 mask 转为 float，以参与数学运算（1.0 表示有效，0.0 表示忽略）
     mask = mask.to(dtype=tensor.dtype)
+    mask = mask.to(tensor.device)
     # 2-1如果不指定 dim，就在所有元素上求 masked mean
     # 2-2在指定维度上分别计算加权和与有效元素个数
     if dim is None:
